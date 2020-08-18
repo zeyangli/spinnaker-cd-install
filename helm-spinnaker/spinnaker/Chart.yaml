@@ -1,0 +1,20 @@
+apiVersion: v1
+appVersion: 1.16.2
+description: Open source, multi-cloud continuous delivery platform for releasing software
+  changes with high velocity and confidence.
+home: http://spinnaker.io/
+icon: https://pbs.twimg.com/profile_images/669205226994319362/O7OjwPrh_400x400.png
+maintainers:
+- email: viglesias@google.com
+  name: viglesiasce
+- email: ezimanyi@google.com
+  name: ezimanyi
+- email: hello@dwardu.com
+  name: dwardu89
+- email: username.taken@gmail.com
+  name: paulczar
+name: spinnaker
+sources:
+- https://github.com/spinnaker
+- https://github.com/viglesiasce/images
+version: 2.2.0

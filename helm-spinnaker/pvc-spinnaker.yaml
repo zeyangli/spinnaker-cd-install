@@ -1,0 +1,47 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: halyard-pv
+  namespace: spinnaker
+spec:
+  accessModes:
+    - ReadWriteOnce        #访问模式定义为只能以读写的方式挂载到单个节点
+  capacity:
+    storage: 10Gi
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: halyard-nfs
+  nfs:
+    path: /data/devops/spinnaker/halyard
+    server: 192.168.1.200
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: redis-pv
+  namespace: spinnaker
+spec:
+  accessModes:
+    - ReadWriteOnce        #访问模式定义为只能以读写的方式挂载到单个节点
+  capacity:
+    storage: 10Gi
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: redis-nfs
+  nfs:
+    path: /data/devops/spinnaker/redis
+    server: 192.168.1.200
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: minio-pv
+  namespace: spinnaker
+spec:
+  accessModes:
+    - ReadWriteOnce        #访问模式定义为只能以读写的方式挂载到单个节点
+  capacity:
+    storage: 10Gi
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: minio-nfs
+  nfs:
+    path: /data/devops/spinnaker/minio
+    server: 192.168.1.200
