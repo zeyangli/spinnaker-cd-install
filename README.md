@@ -1,4 +1,4 @@
-# Spinnaker Install
+# Spinnaker Installation Manual
 
 
 目前spinnaker的安装大都采用halyard部署，也有两种版本。一种使用halyard，另外一种是使用helm job（其实也是用的halyard）。
