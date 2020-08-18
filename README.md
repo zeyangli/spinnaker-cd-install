@@ -14,7 +14,7 @@
 
 ## halyard-bom-install
 
-使用halyard安装配置spinnaker，无需设置代理。（bom方式）
+使用halyard安装配置spinnaker，无需设置代理。（bom方式）这种方式会启动一个docker容器（halyard）执行任务。
 
 ```
 ├── bom-yaml-1.19.4.tar.gz   ## bom所需的yaml文件
@@ -30,7 +30,7 @@
 
 ## helm-bom-install
 
-其实是一个helm chart，已经对values做了修改。
+其实是一个helm chart，已经对values做了修改。这种方式会启动一个pod（halyard）执行任务。
 
 ```
 sh getimages.sh  ## 获取阿里云镜像
