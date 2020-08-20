@@ -44,11 +44,11 @@ for s in serviceData.keys():
         createDirCmd = "mkdir -p %s/%s/%s" %(bomDir, s, serviceVersion )
         os.system(createDirCmd)
  
-        ## deck配置文件为settings.js,其他服务为yaml。
+        ## deck配置文件为settings.js,其他服务为yml。
         if s == "deck":
             serviceFile="settings.js"
         else:
-            serviceFile="%s.yaml" %(s)
+            serviceFile="%s.yml" %(s)
 
         ## 下载服务配置文件，放到服务目录下
         cmd1 = "curl %s/%s/%s/halconfig/%s -o %s/%s/%s" %(gitRepo, s, tag, serviceFile, bomDir, s, serviceFile )
