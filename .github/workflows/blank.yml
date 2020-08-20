@@ -3,6 +3,10 @@
 name: GetSpinnakerVersionFiles
 env:
   SPINNAKER_VERSION: 1.19.14
+  FILE_PATH: "1.19.14.yaml"
+  REGISTRY_URL: "gcr.io/spinnaker-marketplace/"
+  NEW_REGISTRY_URL: "registry.cn-beijing.aliyuncs.com/spinnaker-cd/"
+  TAG_FILE: "tagfile.txt"
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -18,12 +22,8 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-      
     # Runs a single command using the runners shell
     - name: Install Halyard
       run: |
@@ -37,22 +37,36 @@ jobs:
         chmod +x ./InstallHalyard.sh
         sudo bash InstallHalyard.sh --user runner -y
         hal -v    
+    
+    ## 获取spinnaker版本文件
+    - name: Get Version File
+      run: |  
         hal version list
         echo "###### hal version bom ######"
         hal version bom ${SPINNAKER_VERSION} -q -o yaml   
         hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yaml
         
-        cat ${SPINNAKER_VERSION}.yaml
+        #cat ${SPINNAKER_VERSION}.yaml
+        #python --version
+        #python3 --version || echo 123
 
-        python --version
-        python3 --version || echo 123
-    
+    ## 解析版本文件生成镜像标签
+    - name: Get Image Tag
+      run: |
+        pip3 install pyyaml
+        python3 tools/GetTag.py ${FILE_PATH}  ${TAG_FILE}
+        cat ${TAG_FILE}
+
+        docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} ${NEW_REGISTRY_URL}
+        for tag in $(cat ${TAG_FILE})
+        do 
+           docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
+           docker push ${NEW_REGISTRY_URL}${tag}
+        done
+        
     ## artifact https://github.com/actions/upload-artifact
     - uses: actions/upload-artifact@v2
       with: 
         name: bom-version-file
         path: 1.19.14.yaml
         
-        
-        
-
