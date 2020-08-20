@@ -2,7 +2,7 @@
 
 name: Spinnaker Pre Install
 env:
-  SPINNAKER_VERSION: 1.19.14
+  SPINNAKER_VERSION: 1.21.0
   FILE_PATH: "1.19.14.yaml"
   REGISTRY_URL: "gcr.io/spinnaker-marketplace/"
   NEW_REGISTRY_URL: "registry.cn-beijing.aliyuncs.com/spinnaker-cd/"
@@ -69,5 +69,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       with: 
         name: bom-version-file
-        path: 1.19.14.yaml
+        path: 1.21.0.yaml
         
