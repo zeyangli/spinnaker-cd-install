@@ -48,9 +48,15 @@ kubectl get pod -n spinnaker
 
 ```
 
+## Spinnaker版本更新
+使用github actions 自动化获取版本文件，上传镜像。然后手动获取服务版本分支中的配置文件，最后手动发布。
+
+
 
 以上内容简单记录，后续再进一步整理完善。目前此版本仅限于学习研究使用，避免生产环境使用。
 
 The Bill of Materials (BOM) ：https://spinnaker.io/guides/operator/custom-boms/
+https://spinnaker.io/community/releases/versions/  获取最新稳定版本
+
 
 
