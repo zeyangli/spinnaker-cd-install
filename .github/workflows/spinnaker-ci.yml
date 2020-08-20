@@ -74,6 +74,8 @@ jobs:
         mv ${TAG_FILE} artifacts/${SPINNAKER_VERSION}/
         mv tools/GetImages.sh artifacts/${SPINNAKER_VERSION}/
         mv ${BOM_DIR} artifacts/${SPINNAKER_VERSION}/
+        mkdir -p artifacts/${SPINNAKER_VERSION}/${BOM_DIR}/bom
+        mv ${SPINNAKER_VERSION}.yaml artifacts/${SPINNAKER_VERSION}/${BOM_DIR}/bom/
         
     ## artifact https://github.com/actions/upload-artifact
     - uses: actions/upload-artifact@v2
