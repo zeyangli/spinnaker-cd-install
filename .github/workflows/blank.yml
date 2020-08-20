@@ -2,7 +2,7 @@
 
 name: CI
 env:
-  SPINNAKER_VERSION: 1.21.0
+  SPINNAKER_VERSION: 1.19.14
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -23,11 +23,7 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-      # artifact https://github.com/actions/upload-artifact
-      with:
-        name: my-artifact
-        path: ${SPINNAKER_VERSION}.yaml
-
+      
     # Runs a single command using the runners shell
     - name: Install Halyard
       run: |
@@ -49,7 +45,12 @@ jobs:
         cat ${SPINNAKER_VERSION}.yaml
 
         python --version
-        
+    
+    ## artifact https://github.com/actions/upload-artifact
+    - uses: actions/upload-artifact@v2
+      with: 
+        name: my-artifact
+        path: ${SPINNAKER_VERSION}.yaml
         
         
         
