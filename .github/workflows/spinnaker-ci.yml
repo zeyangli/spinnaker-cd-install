@@ -10,8 +10,8 @@ env:
 
 on:
   push:
-    paths:
-    - '.github/workflows'
+    branches:
+      - master
 
 jobs:
   build:
