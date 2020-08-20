@@ -59,6 +59,9 @@ kubectl get pod -n spinnaker
 
 
 
+
+
+------
 以上内容简单记录，后续再进一步整理完善。目前此版本仅限于学习研究使用，避免生产环境使用。
 
 The Bill of Materials (BOM) ：https://spinnaker.io/guides/operator/custom-boms/
