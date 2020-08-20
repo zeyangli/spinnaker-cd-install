@@ -3,7 +3,7 @@
 name: Spinnaker Pre Install
 env:
   SPINNAKER_VERSION: 1.21.0
-  FILE_PATH: "1.19.14.yaml"
+  FILE_PATH: "1.21.0.yaml"
   REGISTRY_URL: "gcr.io/spinnaker-marketplace/"
   NEW_REGISTRY_URL: "registry.cn-beijing.aliyuncs.com/spinnaker-cd/"
   TAG_FILE: "tagfile.txt"
