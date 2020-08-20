@@ -52,7 +52,7 @@ jobs:
         python3 tools/GetTag.py ${SPINNAKER_VERSION}.yaml  ${TAG_FILE} ${BOM_DIR}
         
         ls ${BOM_DIR}
-        tree
+        
 
         echo  -e "\033[32m  ---> Tag File ---> \033[0m"
         cat ${TAG_FILE}
