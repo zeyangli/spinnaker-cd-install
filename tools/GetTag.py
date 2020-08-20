@@ -37,7 +37,7 @@ os.system("mkdir -p %s" %(bomDir))
 for s in serviceData.keys():
     if  s not in  ["defaultArtifact","monitoring-third-party","monitoring-daemon"]:
       serviceVersion = serviceData[s]['version']
-      tag = serviceVersion.split("-")[0]
+      tag = "version-" + serviceVersion.split("-")[0]
       print(s  + ">>>>===GitHub Tag Version===>>>>" + tag)
 
       ## 创建一个服务目录
