@@ -6,6 +6,7 @@ env:
   REGISTRY_URL: "gcr.io/spinnaker-marketplace/"
   NEW_REGISTRY_URL: "registry.cn-beijing.aliyuncs.com/spinnaker-cd/"
   TAG_FILE: "tagfile.txt"
+  BOM_DIR: ".boms"
 
 on:
   push:
@@ -48,7 +49,9 @@ jobs:
     ## docker https://github.com/Azure/docker-login
     - name: 03- Push Image To Aliyun
       run: |
-        python3 tools/GetTag.py ${SPINNAKER_VERSION}.yaml  ${TAG_FILE}
+        python3 tools/GetTag.py ${SPINNAKER_VERSION}.yaml  ${TAG_FILE} ${BOM_DIR}
+        
+        ls ${BOM_DIR}
 
         echo  -e "\033[32m  ---> Tag File ---> \033[0m"
         cat ${TAG_FILE}
@@ -69,6 +72,7 @@ jobs:
         mkdir -p artifacts/${SPINNAKER_VERSION}
         mv ${TAG_FILE} artifacts/${SPINNAKER_VERSION}/
         mv tools/GetImages.sh artifacts/${SPINNAKER_VERSION}/
+        mv ${BOM_DIR} artifacts/${SPINNAKER_VERSION}/
         
     ## artifact https://github.com/actions/upload-artifact
     - uses: actions/upload-artifact@v2
