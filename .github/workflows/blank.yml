@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v2
 
     # Runs a single command using the runners shell
-    - name: Run a one-line script
+    - name: Install Halyard
       run: |
         echo "###user" && whoami 
         echo "###system version" &&  cat /etc/issue
@@ -39,4 +39,12 @@ jobs:
         hal -v    
         hal version list
         echo "###### hal version bom ######"
-        hal version bom ${SPINNAKER_VERSION} -q -o yaml    
+        hal version bom ${SPINNAKER_VERSION} -q -o yaml   
+        hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yaml
+        
+        cat ${SPINNAKER_VERSION}.yaml
+        
+        
+        
+        
+
