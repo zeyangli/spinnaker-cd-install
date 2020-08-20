@@ -9,9 +9,8 @@ env:
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    paths:
+    - '.github/workflows'
 
 jobs:
   build:
@@ -32,7 +31,7 @@ jobs:
         sudo bash InstallHalyard.sh --user runner -y
         hal -v    
     
-    ##获取spinnaker版本文件
+    ## 获取spinnaker版本文件
     - name: 02- Get Version File
       run: |  
         hal version list
