@@ -49,7 +49,13 @@ kubectl get pod -n spinnaker
 ```
 
 ## Spinnaker版本更新
-使用github actions 自动化获取版本文件，上传镜像。然后手动获取服务版本分支中的配置文件，最后手动发布。
+使用github actions 自动化获取版本文件，获取gcr.io镜像然后更名上传到阿里云仓库中。最后会生成一个制品`version-image-script`，里面包含镜像tag文件和下载镜像的脚本。
+(图片如果加载不出来，可以直接在Actions中查看最新的流水线中获取哦)
+ ![artifacts-images](docs/artifacts.png)
+
+然后手动获取服务版本分支中的配置文件，最后手动发布。
+
+
 
 
 
