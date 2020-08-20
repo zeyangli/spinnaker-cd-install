@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: GetSpinnakerVersionFiles
+name: Spinnaker Pre Install
 env:
   SPINNAKER_VERSION: 1.19.14
   FILE_PATH: "1.19.14.yaml"
@@ -53,6 +53,7 @@ jobs:
     ## 解析版本文件生成镜像标签
     - name: Get Image Tag
       run: |
+        pip3 install setuptools
         pip3 install pyyaml
         python3 tools/GetTag.py ${FILE_PATH}  ${TAG_FILE}
         cat ${TAG_FILE}
