@@ -2,8 +2,8 @@
 
 name: Spinnaker Pre Install
 env:
-  SPINNAKER_VERSION: 1.21.0
-  FILE_PATH: "1.21.0.yaml"
+  SPINNAKER_VERSION: 1.19.14
+  FILE_PATH: "1.19.14.yaml"
   REGISTRY_URL: "gcr.io/spinnaker-marketplace/"
   NEW_REGISTRY_URL: "registry.cn-beijing.aliyuncs.com/spinnaker-cd/"
   TAG_FILE: "tagfile.txt"
@@ -56,11 +56,16 @@ jobs:
         pip3 install setuptools
         pip3 install pyyaml
         python3 tools/GetTag.py ${FILE_PATH}  ${TAG_FILE}
+
+        echo  -e "\033[32m  ---> Tag File ---> \033[0m"
         cat ${TAG_FILE}
 
         docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} ${NEW_REGISTRY_URL}
         for tag in $(cat ${TAG_FILE})
         do 
+
+           echo  -e "\033[32m  ---> pull ---> ${REGISTRY_URL}${tag} \033[0m"
+           docker pull ${REGISTRY_URL}${tag}
            docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
            docker push ${NEW_REGISTRY_URL}${tag}
         done
@@ -69,5 +74,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       with: 
         name: bom-version-file
-        path: 1.21.0.yaml
+        path: 1.19.14.yaml
         
