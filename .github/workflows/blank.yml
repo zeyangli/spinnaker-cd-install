@@ -74,5 +74,5 @@ jobs:
     ## artifact https://github.com/actions/upload-artifact
     - uses: actions/upload-artifact@v2
       with: 
-        name: spinnaker-images-script
+        name: ${{ env.SPINNAKER_VERSION }}-Image-Script
         path: artifacts/*
