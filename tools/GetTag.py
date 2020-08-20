@@ -36,22 +36,33 @@ for s in serviceData.keys():
 os.system("mkdir -p %s" %(bomDir))
 for s in serviceData.keys():
     if  s not in  ["defaultArtifact","monitoring-third-party","monitoring-daemon"]:
-      serviceVersion = serviceData[s]['version']
-      tag = "version-" + serviceVersion.split("-")[0]
-      print(s  + ">>>>===GitHub Tag Version===>>>>" + tag)
+        serviceVersion = serviceData[s]['version']
+        tag = "version-" + serviceVersion.split("-")[0]
+        print(s  + ">>>>===GitHub Tag Version===>>>>" + tag)
 
-      ## 创建一个服务目录
-      createDirCmd = "mkdir -p %s/%s/%s" %(bomDir, s, serviceVersion )
-      os.system(createDirCmd)
+        ## 创建一个服务目录
+        createDirCmd = "mkdir -p %s/%s/%s" %(bomDir, s, serviceVersion )
+        os.system(createDirCmd)
+ 
+        ## deck配置文件为settings.js,其他服务为yaml。
+        if s == "deck":
+            serviceFile="settings.js"
+        else:
+            serviceFile="%s.yaml" %(s)
 
-      ## 下载服务配置文件，放到服务目录下
-      cmd1 = "curl %s/%s/%s/halconfig/%s.yml -o %s/%s/%s.yaml" %(gitRepo, s, tag, s, bomDir, s, s )
-      os.system(cmd1)
+        ## 下载服务配置文件，放到服务目录下
+        cmd1 = "curl %s/%s/%s/halconfig/%s -o %s/%s/%s" %(gitRepo, s, tag, serviceFile, bomDir, s, serviceFile )
+        os.system(cmd1)
 
-      ## 复制服务配置文件，放到服务版本目录下
-      cmd2 = "cp %s/%s/%s.yaml %s/%s/%s/%s.yaml" %(bomDir, s, s, bomDir,  s, serviceVersion, s )
-      os.system(cmd2)
+        ## 复制服务配置文件，放到服务版本目录下
+        cmd2 = "cp %s/%s/%s %s/%s/%s/%s" %(bomDir, s, serviceFile, bomDir,  s, serviceVersion, serviceFile )
+        os.system(cmd2)
 
-      ## 检查文件
-      os.system("ls %s/%s" %(bomDir, s ))
-      os.system("ls %s/%s/%s" %(bomDir, s, serviceVersion ))
+        if s == "rosco":
+            os.system("git clone --branch %s https://github.com/spinnaker/rosco.git " %(tag))
+            os.system("cp -r rosco/halconfig/* %s/%s/" %(bomDir, s))
+            os.system("cp -r rosco/halconfig/* %s/%s/%s/" %(bomDir, s, serviceVersion))
+
+        ## 检查文件
+        os.system("ls %s/%s" %(bomDir, s ))
+        os.system("ls %s/%s/%s" %(bomDir, s, serviceVersion ))
