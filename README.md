@@ -1,5 +1,6 @@
 # Spinnaker Installation Manual
 
+![Spinnaker Pre Install](https://github.com/zeyangli/spinnaker-cd-install/workflows/Spinnaker%20Pre%20Install/badge.svg?branch=master)
 
 目前spinnaker的安装大都采用halyard部署，也有两种版本。一种使用halyard，另外一种是使用helm job（其实也是用的halyard）。
 使用halyard安装部署非常简单，如果您的网络允许部署起立更快！
