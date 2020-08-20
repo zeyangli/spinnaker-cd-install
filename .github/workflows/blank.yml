@@ -45,11 +45,12 @@ jobs:
         cat ${SPINNAKER_VERSION}.yaml
 
         python --version
+        python3 --version || echo 123
     
     ## artifact https://github.com/actions/upload-artifact
     - uses: actions/upload-artifact@v2
       with: 
-        name: my-artifact
+        name: bom-version-file
         path: 1.19.14.yaml
         
         
