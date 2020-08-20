@@ -51,7 +51,8 @@ jobs:
         #python3 --version || echo 123
 
     ## 解析版本文件生成镜像标签
-    - name: Get Image Tag
+    ## 上传到阿里云镜像仓库
+    - name: Push Image To Aliyun
       run: |
         python3 tools/GetTag.py ${FILE_PATH}  ${TAG_FILE}
 
