@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: GetSpinnakerVersionFiles
 env:
   SPINNAKER_VERSION: 1.19.14
 
@@ -50,7 +50,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with: 
         name: my-artifact
-        path: ${SPINNAKER_VERSION}.yaml
+        path: 1.19.14.yaml
         
         
         
