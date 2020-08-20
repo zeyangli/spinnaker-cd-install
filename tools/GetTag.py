@@ -22,7 +22,7 @@ print(serviceData.keys())
 print("======> Get Tag <======")
 os.system("rm -fr " + tagFile)
 for s in serviceData.keys():
-    if s != "defaultArtifact":
+    if s not in  ["defaultArtifact","monitoring-third-party","monitoring-daemon":
       print(s + ":" + serviceData[s]['version'])
       tag = s + ":" + serviceData[s]['version']
       f = open(tagFile, 'a')
