@@ -85,6 +85,8 @@ class SpinnakerToDo(object):
                 serviceVersion = data['services'][s]['version']
                 data['services'][s]['version'] = "local:" + serviceVersion
         
+        
+        data = yaml.dump(data)
         print(data)
         f = open(self.filePath, 'a')
         f.write(data)
