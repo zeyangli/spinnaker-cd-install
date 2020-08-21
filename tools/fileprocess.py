@@ -35,11 +35,11 @@ class SpinnakerToDo(object):
         serviceData = self.GetYamlData()
         for s in serviceData.keys():
             if  s not in  self.exceptServices : 
-            print(s + ":" + serviceData[s]['version'])
-            tag = s + ":" + serviceData[s]['version']
-            f = open(self.tagFile, 'a')
-            f.write(tag + "\n")
-            f.close()
+                print(s + ":" + serviceData[s]['version'])
+                tag = s + ":" + serviceData[s]['version']
+                f = open(self.tagFile, 'a')
+                f.write(tag + "\n")
+                f.close()
 
     ## 生成服务配置文件（首先用户会将当前版本的bom文件打包上传到updates目录中）
     def CreateServiceConf(self):
