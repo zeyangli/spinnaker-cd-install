@@ -58,7 +58,7 @@ class SpinnakerToDo(object):
                 else:
                     serviceFile="%s.yml" %(s)
                 ## 下载服务配置文件，放到服务目录下
-                cmd1 = "curl %s/%s/%s/halconfig/%s -o %s/%s/%s" %(gitRepo, s, tag, serviceFile, self.bomDir, s, serviceFile )
+                cmd1 = "curl %s/%s/%s/halconfig/%s -o %s/%s/%s" %(self.gitRepo, s, tag, serviceFile, self.bomDir, s, serviceFile )
                 os.system(cmd1)
                 ## 复制服务配置文件，放到服务版本目录下
                 cmd2 = "cp %s/%s/%s %s/%s/%s/%s" %(self.bomDir, s, serviceFile, self.bomDir,  s, serviceVersion, serviceFile )
