@@ -38,7 +38,7 @@ jobs:
         hal version list
         echo "###### hal version bom ######"
         #hal version bom ${SPINNAKER_VERSION} -q -o yaml   
-        hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yaml
+        hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yml
         
         #cat ${SPINNAKER_VERSION}.yaml
         #python --version
@@ -49,7 +49,7 @@ jobs:
     ## docker https://github.com/Azure/docker-login
     - name: 03- Push Image To Aliyun
       run: |
-        python3 tools/GetTag.py ${SPINNAKER_VERSION}.yaml  ${TAG_FILE} ${BOM_DIR}
+        python3 tools/GetTag.py ${SPINNAKER_VERSION}.yml  ${TAG_FILE} ${BOM_DIR}
         
         ls ${BOM_DIR}
         
