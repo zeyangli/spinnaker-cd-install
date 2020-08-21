@@ -40,25 +40,17 @@ jobs:
         #hal version bom ${SPINNAKER_VERSION} -q -o yaml   
         hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yml
 
-
         ## 获取旧版本bom文件
-        
         tar zxf updates/*.tar.gz 
-        
-        #cat ${SPINNAKER_VERSION}.yaml
-        #python --version
-        #python3 --version || echo 123
 
     ## 解析版本文件生成镜像标签
     ## 上传到阿里云镜像仓库
     ## docker https://github.com/Azure/docker-login
     - name: 03- Push Image To Aliyun
       run: |
-        python3 tools/GetTag.py ${SPINNAKER_VERSION}.yml  ${TAG_FILE} ${BOM_DIR}
-        
+        python3 tools/fileprocess.py ${SPINNAKER_VERSION}.yml  ${TAG_FILE} ${BOM_DIR} 
         ls ${BOM_DIR}
-        
-
+      
         echo  -e "\033[32m  ---> Tag File ---> \033[0m"
         cat ${TAG_FILE}
 
@@ -80,6 +72,8 @@ jobs:
         mv tools/GetImages.sh artifacts/${SPINNAKER_VERSION}/
         mv ${BOM_DIR} artifacts/${SPINNAKER_VERSION}/
         #mkdir -p artifacts/${SPINNAKER_VERSION}/${BOM_DIR}/bom
+
+
         mv ${SPINNAKER_VERSION}.yml artifacts/${SPINNAKER_VERSION}/${BOM_DIR}/bom/
         
     ## artifact https://github.com/actions/upload-artifact
@@ -87,3 +81,4 @@ jobs:
       with: 
         name: ${{ env.SPINNAKER_VERSION }}-Image-Script
         path: artifacts/*
+
