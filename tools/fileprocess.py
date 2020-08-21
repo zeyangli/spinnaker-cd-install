@@ -88,6 +88,7 @@ class SpinnakerToDo(object):
         
         data = yaml.dump(data)
         print(data)
+        os.system("rm -fr " + self.filePath)
         f = open(self.filePath, 'a')
         f.write(data)
         f.close()
