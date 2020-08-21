@@ -41,8 +41,8 @@ for s in serviceData.keys():
         print(s  + ">>>>===GitHub Tag Version===>>>>" + tag)
 
         ## 创建一个服务目录
-        #createDirCmd = "mkdir -p %s/%s/%s" %(bomDir, s, serviceVersion )
-        #os.system(createDirCmd)
+        createDirCmd = "mkdir -p %s/%s/%s" %(bomDir, s, serviceVersion )
+        os.system(createDirCmd)
  
         ## deck配置文件为settings.js,其他服务为yml。
         if s == "deck":
