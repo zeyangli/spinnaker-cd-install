@@ -3,6 +3,7 @@
 VERSION="1.19.4"
 DECK_HOST="http://spinnaker.idevops.site"
 GATE_HOST="http://spin-gate.idevops.site"
+until hal --ready; do sleep 10 ; done
 
 # 设置Spinnaker版本，--version 指定版本
 hal config version edit --version local:${VERSION} --no-validate
@@ -50,8 +51,8 @@ hal config features edit --managed-pipeline-templates-v2-ui true --no-validate
 
 
 ## 设置deck与gate的域名
-hal config security ui edit --override-base-url ${DECK_HOST}
-hal config security api edit --override-base-url ${GATE_HOST}
+hal config security ui edit --override-base-url ${DECK_HOST} --no-validate
+hal config security api edit --override-base-url ${GATE_HOST} --no-validate
 
 ##发布
 hal deploy apply --no-validate

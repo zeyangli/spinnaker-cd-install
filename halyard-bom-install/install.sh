@@ -71,7 +71,13 @@ function Install(){
     -v ${BOMS_DIR}:/home/spinnaker/.hal \
     -v ${KUBE_DIR}:/home/spinnaker/.kube \
     -it ${HALY_IMAGE}
+
+    sleep 5
     docker cp halyard.yaml halyard:/opt/halyard/config/halyard.yml
+    docker stop halyard  &&  docker start halyard
+    sleep 3
+    docker ps | grep halyard
+    sleep 5
     chmod +x halyard.sh
     docker cp halyard.sh halyard:/home/spinnaker/halyard.sh
     docker exec -it halyard ./home/spinnaker/halyard.sh
