@@ -38,7 +38,7 @@ jobs:
         hal version list
         echo "###### hal version bom ######"
         #hal version bom ${SPINNAKER_VERSION} -q -o yaml   
-        hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yaml
+        hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yml
         
         #cat ${SPINNAKER_VERSION}.yaml
         #python --version
