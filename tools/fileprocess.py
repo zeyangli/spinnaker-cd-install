@@ -50,7 +50,7 @@ class SpinnakerToDo(object):
                 tag = "version-" + serviceVersion.split("-")[0]
                 print(s  + ">>>>===GitHub Tag Version===>>>>" + tag)
                 ## 创建一个服务目录
-                createDirCmd = "mkdir -p %s/%s/%s" %(bomDir, s, serviceVersion )
+                createDirCmd = "mkdir -p %s/%s/%s" %(self.bomDir, s, serviceVersion )
                 os.system(createDirCmd)
                 ## deck配置文件为settings.js,其他服务为yml。
                 if s == "deck":
@@ -58,10 +58,10 @@ class SpinnakerToDo(object):
                 else:
                     serviceFile="%s.yml" %(s)
                 ## 下载服务配置文件，放到服务目录下
-                cmd1 = "curl %s/%s/%s/halconfig/%s -o %s/%s/%s" %(gitRepo, s, tag, serviceFile, bomDir, s, serviceFile )
+                cmd1 = "curl %s/%s/%s/halconfig/%s -o %s/%s/%s" %(gitRepo, s, tag, serviceFile, self.bomDir, s, serviceFile )
                 os.system(cmd1)
                 ## 复制服务配置文件，放到服务版本目录下
-                cmd2 = "cp %s/%s/%s %s/%s/%s/%s" %(bomDir, s, serviceFile, bomDir,  s, serviceVersion, serviceFile )
+                cmd2 = "cp %s/%s/%s %s/%s/%s/%s" %(self.bomDir, s, serviceFile, self.bomDir,  s, serviceVersion, serviceFile )
                 os.system(cmd2)
                 ## rosco服务需要额外下载几个目录(images.yml packer)
                 if s == "rosco":
@@ -69,8 +69,8 @@ class SpinnakerToDo(object):
                     os.system("cp -r rosco/halconfig/* %s/%s/" %(bomDir, s))
                     os.system("cp -r rosco/halconfig/* %s/%s/%s/" %(bomDir, s, serviceVersion))
                 ## 检查文件
-                os.system("ls %s/%s" %(bomDir, s ))
-                os.system("ls %s/%s/%s" %(bomDir, s, serviceVersion ))
+                os.system("ls %s/%s" %(self.bomDir, s ))
+                os.system("ls %s/%s/%s" %(self.bomDir, s, serviceVersion ))
     
     ## 更新bom版本文件中的版本号为local:
     def UpdateBomVersionFile(self):
