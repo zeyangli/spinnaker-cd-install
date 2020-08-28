@@ -1,0 +1,15 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ci-minio-pv
+  namespace: devops
+spec:
+  accessModes:
+    - ReadWriteOnce       
+  capacity:
+    storage: 50Gi
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  nfs:
+    path: /data/devops/minio-data
+    server: 192.168.1.200
