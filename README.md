@@ -49,12 +49,35 @@ kubectl get pod -n spinnaker
 ```
 
 ## Spinnaker版本更新
+注意：现在已经在actions中配置ci，大部分步骤都是自动完成的。需要提前将您当前spinnaker版本的boms文件（~/.hal/.boms）打包上传到代理库updates目录中哦！
+
 使用github actions 自动化获取版本文件，获取gcr.io镜像然后更名上传到阿里云仓库中。最后会生成一个制品`version-image-script`，里面包含镜像tag文件和下载镜像的脚本。
 (图片如果加载不出来，可以直接在Actions中查看最新的流水线中获取哦)
  ![artifacts-images](docs/artifacts.png)
 
-然后手动获取服务版本分支中的配置文件，最后手动发布。
+然后手动获取服务版本分支中的配置文件，（此步骤已经在ci中实现，无需手动，直接下载actions制品即可）
 
+
+最后手动发布。
+
+```
+unzip 1.19.14-Image-Script.zip
+cd 1.19.14
+
+rm -fr ~/.hal/.boms/
+mv .boms/ ~/.hal/
+chmod 777 -R ~/.hal/*
+ 
+docker exec -it halyard bash
+hal config version edit --version local:1.19.14 --no-validate
+hal deploy apply --no-validate
+```
+
+回滚
+```
+hal config version edit --version local:1.19.4 --no-validate
+hal deploy apply --no-validate
+```
 
 
 
