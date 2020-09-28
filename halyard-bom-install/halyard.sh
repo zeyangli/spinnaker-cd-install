@@ -8,6 +8,9 @@ until hal --ready; do sleep 10 ; done
 # 设置Spinnaker版本，--version 指定版本
 hal config version edit --version local:${VERSION} --no-validate
 
+## 设置时区
+hal config edit --timezone Asia/Shanghai
+
 ## Storage 配置基于minio搭建的S3存储
 hal config storage s3 edit \
         --endpoint http://minio.idevops.site \
