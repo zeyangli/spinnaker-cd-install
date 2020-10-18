@@ -34,6 +34,12 @@ class SpinnakerToDo(object):
 
         serviceData = self.GetYamlData()
         for s in serviceData.keys():
+            if s == 'monitoring-daemon':
+                print(s + ":" + serviceData[s]['version'])
+                tag = s + ":" + serviceData[s]['version']
+                f = open(self.tagFile, 'a')
+                f.write(tag + "\n")
+                f.close()
             if  s not in  self.exceptServices : 
                 print(s + ":" + serviceData[s]['version'])
                 tag = s + ":" + serviceData[s]['version']
