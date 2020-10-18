@@ -58,17 +58,7 @@ class SpinnakerToDo(object):
                     serviceFile="settings.js"
                 else:
                     serviceFile="%s.yml" %(s)
-                ## 下载服务配置文件，放到服务目录下
-                cmd1 = "curl %s/%s/%s/halconfig/%s -o %s/%s/%s" %(self.gitRepo, s, tag, serviceFile, self.bomDir, s, serviceFile )
-                os.system(cmd1)
-                ## 复制服务配置文件，放到服务版本目录下
-                cmd2 = "cp %s/%s/%s %s/%s/%s/%s" %(self.bomDir, s, serviceFile, self.bomDir,  s, serviceVersion, serviceFile )
-                os.system(cmd2)
-                ## rosco服务需要额外下载几个目录(images.yml packer)
-                if s == "rosco":
-                    os.system("git clone --branch %s https://github.com/spinnaker/rosco.git " %(tag))
-                    os.system("cp -r rosco/halconfig/* %s/%s/" %(self.bomDir, s))
-                    os.system("cp -r rosco/halconfig/* %s/%s/%s/" %(self.bomDir, s, serviceVersion))
+                    
                 ## 监控程序
                 if s == "monitoring-daemon":
                     serviceFile = 'spinnaker-monitoring.yml'
@@ -78,9 +68,22 @@ class SpinnakerToDo(object):
                     os.system(cmd1)
                     cmd2 = "cp %s/%s/%s %s/%s/%s/%s" %(self.bomDir, s, serviceFile, self.bomDir,  s, serviceVersion, serviceFile )
                     os.system(cmd2)
-                ## 检查文件
-                os.system("ls %s/%s" %(self.bomDir, s ))
-                os.system("ls %s/%s/%s" %(self.bomDir, s, serviceVersion ))
+                else :
+                    ## 下载服务配置文件，放到服务目录下
+                    cmd1 = "curl %s/%s/%s/halconfig/%s -o %s/%s/%s" %(self.gitRepo, s, tag, serviceFile, self.bomDir, s, serviceFile )
+                    os.system(cmd1)
+                    ## 复制服务配置文件，放到服务版本目录下
+                    cmd2 = "cp %s/%s/%s %s/%s/%s/%s" %(self.bomDir, s, serviceFile, self.bomDir,  s, serviceVersion, serviceFile )
+                    os.system(cmd2)
+                    ## rosco服务需要额外下载几个目录(images.yml packer)
+                    if s == "rosco":
+                        os.system("git clone --branch %s https://github.com/spinnaker/rosco.git " %(tag))
+                        os.system("cp -r rosco/halconfig/* %s/%s/" %(self.bomDir, s))
+                        os.system("cp -r rosco/halconfig/* %s/%s/%s/" %(self.bomDir, s, serviceVersion))
+
+                    ## 检查文件
+                    os.system("ls %s/%s" %(self.bomDir, s ))
+                    os.system("ls %s/%s/%s" %(self.bomDir, s, serviceVersion ))
     
     ## 更新bom版本文件中的版本号为local:
     def UpdateBomVersionFile(self):
