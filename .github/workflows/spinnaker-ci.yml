@@ -18,34 +18,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    ## 安装Halyard部署工具
-    - name: 01- Install Halyard
+    
+    - name: 01-安装Halyard部署工具
       run: |
-        echo "###user" && whoami 
-        echo "###system version" &&  cat /etc/issue
-        echo "###docker info" && docker info 
-        
-        # curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh
-        echo "###### pwd ######"
-        pwd
         chmod +x ./InstallHalyard.sh
         sudo bash InstallHalyard.sh --user runner -y
         hal -v    
     
-    ## 获取spinnaker版本文件
-    - name: 02- Get Version File
+    ## 
+    - name: 02- 获取spinnaker版本文件
       run: |  
         hal version list
-        echo "###### hal version bom ######"
-        #hal version bom ${SPINNAKER_VERSION} -q -o yaml   
         hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yml
-        
         mkdir -p .boms
 
     ## 解析版本文件生成镜像标签
     ## 上传到阿里云镜像仓库
     ## docker https://github.com/Azure/docker-login
-    - name: 03- Push Image To Aliyun
+    - name: 03-同步镜像到阿里云
       run: |
         python3 tools/fileprocess.py ${SPINNAKER_VERSION}.yml  ${TAG_FILE} ${BOM_DIR} 
         ls ${BOM_DIR}
@@ -56,7 +46,6 @@ jobs:
         docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} ${NEW_REGISTRY_URL}
         for tag in $(cat ${TAG_FILE})
         do 
-
            echo  -e "\033[32m  ---> pull ---> ${REGISTRY_URL}${tag} \033[0m"
            docker pull ${REGISTRY_URL}${tag}
            docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
@@ -64,7 +53,7 @@ jobs:
         done
 
     ## 收集镜像tag文件和下载镜像的脚本
-    - name: 04- Create Image File
+    - name: 04- 收集镜像tag文件和下载镜像的脚本
       run : |
         mkdir -p artifacts/${SPINNAKER_VERSION}
         mv ${TAG_FILE} artifacts/${SPINNAKER_VERSION}/
