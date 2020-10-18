@@ -10,7 +10,8 @@ class SpinnakerToDo(object):
         self.tagFile = sys.argv[2]
         self.bomDir = sys.argv[3]
         self.gitRepo = "https://raw.githubusercontent.com/spinnaker"
-        self.exceptServices = ["defaultArtifact","monitoring-third-party","monitoring-daemon"]
+        #self.exceptServices = ["defaultArtifact","monitoring-third-party","monitoring-daemon"]
+        self.exceptServices = ["defaultArtifact","monitoring-third-party"]
 
 
     ## 读取yaml文件
@@ -34,12 +35,6 @@ class SpinnakerToDo(object):
 
         serviceData = self.GetYamlData()
         for s in serviceData.keys():
-            if s == 'monitoring-daemon':
-                print(s + ":" + serviceData[s]['version'])
-                tag = s + ":" + serviceData[s]['version']
-                f = open(self.tagFile, 'a')
-                f.write(tag + "\n")
-                f.close()
             if  s not in  self.exceptServices : 
                 print(s + ":" + serviceData[s]['version'])
                 tag = s + ":" + serviceData[s]['version']
@@ -74,6 +69,15 @@ class SpinnakerToDo(object):
                     os.system("git clone --branch %s https://github.com/spinnaker/rosco.git " %(tag))
                     os.system("cp -r rosco/halconfig/* %s/%s/" %(self.bomDir, s))
                     os.system("cp -r rosco/halconfig/* %s/%s/%s/" %(self.bomDir, s, serviceVersion))
+                ## 监控程序
+                if s == "monitoring-daemon":
+                    serviceFile = 'spinnaker-monitoring.yml'
+                    ## 下载服务配置文件，放到服务目录下
+                    ## https://raw.githubusercontent.com/spinnaker/spinnaker-monitoring/version-0.18.1/spinnaker-monitoring-daemon/halconfig/spinnaker-monitoring.yml
+                    cmd1 = "curl %s/%s/%s/spinnaker-monitoring-daemon/halconfig/%s -o %s/%s/%s" %(self.gitRepo, 'spinnaker-monitoring', tag, serviceFile, self.bomDir, s, serviceFile )
+                    os.system(cmd1)
+                    cmd2 = "cp %s/%s/%s %s/%s/%s/%s" %(self.bomDir, s, serviceFile, self.bomDir,  s, serviceVersion, serviceFile )
+                    os.system(cmd2)
                 ## 检查文件
                 os.system("ls %s/%s" %(self.bomDir, s ))
                 os.system("ls %s/%s/%s" %(self.bomDir, s, serviceVersion ))
