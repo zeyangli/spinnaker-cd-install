@@ -10,8 +10,8 @@ env:
 
 on:
   push:
-    branches:
-      - master
+    paths:
+      - '.github/workflows/**'
 
 jobs:
   build:
@@ -39,9 +39,8 @@ jobs:
         echo "###### hal version bom ######"
         #hal version bom ${SPINNAKER_VERSION} -q -o yaml   
         hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yml
-
-        ## 获取旧版本bom文件
-        tar zxf updates/*.tar.gz 
+        
+        mkdir -p .boms
 
     ## 解析版本文件生成镜像标签
     ## 上传到阿里云镜像仓库
