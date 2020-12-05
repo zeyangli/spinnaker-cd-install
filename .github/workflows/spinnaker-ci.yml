@@ -8,6 +8,7 @@ env:
   TAG_FILE: "tagfile.txt"
   BOM_DIR: ".boms"
 
+
 on:
   push:
     paths:
