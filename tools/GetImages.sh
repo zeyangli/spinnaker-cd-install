@@ -1,7 +1,8 @@
 #!/bin/bash
 
 S_REGISTRY="gcr.io/spinnaker-marketplace"
-T_REGISTRY="registry.cn-beijing.aliyuncs.com/spinnaker-cd"
+#T_REGISTRY="registry.cn-beijing.aliyuncs.com/spinnaker-cd"
+T_REGISTRY="docker.io/spinnakercd"
 NODES="node01.zy.com node02.zy.com"
 
 ## 下载镜像
