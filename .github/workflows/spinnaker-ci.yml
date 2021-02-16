@@ -85,7 +85,7 @@ jobs:
         do 
            echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL}${tag} \033[0m"
            docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
-           docker push ${NEW_REGISTRY_URL2}${tag}
+           docker push ${NEW_REGISTRY_URL}${tag}
         done
            
     ## 收集镜像tag文件和下载镜像的脚本
