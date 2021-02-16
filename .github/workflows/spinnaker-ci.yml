@@ -37,7 +37,8 @@ jobs:
         docker ps | grep halyard 
         chmod +x getbom.sh
         docker cp getbom.sh halyard:/opt/getbom.sh
-        docker exec -it halyard /opt/getbom.sh ${SPINNAKER_VERSION}
+        docker exec -u root halyard chmod +x /opt/getbom.sh
+        docker exec -u root halyard sh /opt/getbom.sh ${SPINNAKER_VERSION}
         docker cp halyard:/opt/${SPINNAKER_VERSION}.yml ./${SPINNAKER_VERSION}.yml
         
 
