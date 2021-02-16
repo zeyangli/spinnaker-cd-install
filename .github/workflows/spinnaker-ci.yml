@@ -18,10 +18,11 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
-    
+      
+    ##chmod +x ./InstallHalyard.sh
     - name: 01-安装Halyard部署工具
       run: |
-        chmod +x ./InstallHalyard.sh
+        curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh
         sudo bash InstallHalyard.sh --user runner -y
         sleep 5
         hal -v    
