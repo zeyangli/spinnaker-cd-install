@@ -25,7 +25,7 @@ jobs:
         curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh
         ls 
         sleep 2
-        sudo sh -x InstallHalyard.sh -y
+        sudo bash -x InstallHalyard.sh --user runner -y
         sleep 5
         hal -v    
     
