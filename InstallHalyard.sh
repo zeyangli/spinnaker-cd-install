@@ -347,9 +347,7 @@ configure_defaults
 
 check_java
 install_halyard
-/usr/local/bin/hal --version
-
-ps aux | grep java
+until hal --daemon-endpoint http://127.0.0.1:8064 --ready; do sleep 5 && ps aux  ; done
 su -l -c "hal -v" -s /bin/bash $HAL_USER
 
 configure_bash_completion
