@@ -28,7 +28,6 @@ jobs:
         sudo bash -x InstallHalyard.sh --user runner -y
         sleep 5
         hal -v    
-    
     ## 
     - name: 02- 获取spinnaker版本文件
       run: |  
