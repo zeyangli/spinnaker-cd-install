@@ -33,7 +33,7 @@ jobs:
       run: |
         mkdir ~/.hal
         docker pull registry.cn-beijing.aliyuncs.com/spinnaker-cd/halyard:1.32.0
-        docker run -itd -p 8084:8084 -p 9000:9000 --name halyard -v ~/.hal:/home/spinnaker/.hal -it registry.cn-beijing.aliyuncs.com/spinnaker-cd/halyard:1.32.0
+        docker run -d -p 8084:8084 -p 9000:9000 --name halyard -v ~/.hal:/home/spinnaker/.hal -it registry.cn-beijing.aliyuncs.com/spinnaker-cd/halyard:1.32.0
         sleep 5
         docker ps | grep halyard 
         chmod +x getbom.sh
