@@ -73,7 +73,7 @@ function process_args() {
         ;;
       *)
         echo "ERROR: Unknown argument '$key'"
-        exit -1
+        exit 1
     esac
   done
 }
@@ -153,6 +153,7 @@ function configure_defaults() {
 halyard:
   halconfig:
     directory: $halconfig_dir
+
 spinnaker:
   artifacts:
     debianRepository: $SPINNAKER_REPOSITORY_URL
@@ -167,18 +168,23 @@ EOL
 
   cat > $halconfig_dir/uninstall.sh <<EOL
 #!/usr/bin/env bash
+
 if [[ \`/usr/bin/id -u\` -ne 0 ]]; then
   echo "$0 must be executed with root permissions; exiting"
   exit 1
 fi
+
 read -p "This script uninstalls Halyard and deletes all of its artifacts, are you sure you want to continue? (Y/n): " yes
+
 if [ "\$yes" != "y" ] && [ "\$yes" != "Y" ]; then
   echo "Aborted"
   exit 0
 fi
+
 rm /opt/halyard -rf
 rm /var/log/spinnaker/halyard -rf
 rm -f /usr/local/bin/hal /usr/local/bin/update-halyard
+
 echo "Deleting halconfig and artifacts"
 rm /opt/spinnaker/config/halyard* -rf
 rm $halconfig_dir -rf
@@ -194,75 +200,42 @@ function print_usage() {
 usage: $0 [-y] [--version=<version>] [--user=<user>]
     -y                              Accept all default options during install
                                     (non-interactive mode).
+
     --halyard-bucket-base-url <name>   The bucket the Halyard JAR to be installed
                                        is stored in.
+
     --download-with-gsutil          If specifying a GCS bucket using
                                     --halyard-bucket-base-url, this flag causes the 
                                     install script to rely on gsutil and its 
                                     authentication to fetch the Halyard JAR.
+
     --config-bucket <name>          The bucket the your Bill of Materials and
                                     base profiles are stored in.
+
     --spinnaker-repository <url>    Obtain Spinnaker artifact debians from <url>
                                     rather than the default repository, which is
                                     $SPINNAKER_REPOSITORY_URL.
+
     --spinnaker-registry <url>      Obtain Spinnaker docker images from <url>
                                     rather than the default registry, which is
                                     $SPINNAKER_DOCKER_REGISTRY.
+
     --spinnaker-gce-project <name>  Obtain Spinnaker GCE images from <url>
                                     rather than the default project, which is
                                     $SPINNAKER_GCE_PROJECT.
+
     --version <version>             Specify the exact version of Halyard to
                                     install.
+
     --user <user>                   Specify the user to run Halyard as. This
                                     user must exist.
 EOF
 }
 
-function install_java() {
-  set +e
-  local java_version=$(java -version 2>&1 head -1)
-  set -e
+function check_java() {
 
-  if [[ "$java_version" == *1.8* ]]; then
-    echo "Java is already installed & at the right version"
-    return 0;
-  fi
-
-  if [ ! -f /etc/os-release ]; then
-    >&2 "Unable to determine OS platform (no /etc/os-release file)"
-    exit 1
-  fi
-
-  source /etc/os-release
-
-  if [ "$ID" = "ubuntu" ]; then
-    echo "Running ubuntu $VERSION_ID"
-    # Java 8
-    # https://launchpad.net/~openjdk-r/+archive/ubuntu/ppa
-    add-apt-repository -y ppa:openjdk-r/ppa
-    apt-get update ||:
-
-    apt-get install -y --force-yes openjdk-8-jre
-
-    # https://bugs.launchpad.net/ubuntu/+source/ca-certificates-java/+bug/983302
-    # It seems a circular dependency was introduced on 2016-04-22 with an openjdk-8 release, where
-    # the JRE relies on the ca-certificates-java package, which itself relies on the JRE. D'oh!
-    # This causes the /etc/ssl/certs/java/cacerts file to never be generated, causing a startup
-    # failure in Clouddriver.
-    dpkg --purge --force-depends ca-certificates-java
-    apt-get install -y ca-certificates-java
-  elif [ "$ID" = "debian" ] && [ "$VERSION_ID" = "8" ]; then
-    echo "Running debian 8 (jessie)"
-    apt install -yt jessie-backports openjdk-8-jre-headless ca-certificates-java
-  elif [ "$ID" = "debian" ] && [ "$VERSION_ID" = "9" ]; then
-    echo "Running debian 9 (stretch)"
-    apt install -yt stretch-backports openjdk-8-jre-headless ca-certificates-java
-  elif [ "$ID" = "arch" ] || [ "$ID_LIKE" = "arch" ]; then
-    echo "Running Arch Linux based distro ($PRETTY_NAME)"
-    pacman -Sy --noconfirm java-runtime=8 ca-certificates-utils
-  else
-    >&2 echo "Distribution $PRETTY_NAME is not supported yet - please file an issue"
-    >&2 echo "  https://github.com/spinnaker/halyard/issues"
+  if ! which java 2>&1 > /dev/null; then
+    echo "Couldn't find a 'java' binary in your \$PATH. Halyard requires Java to run."
     exit 1
   fi
 }
@@ -327,6 +300,12 @@ function install_halyard() {
 
 
   if which systemd-sysusers &>/dev/null; then
+    if [ ! -d "/usr/lib/sysusers.d" ]; then
+      if [ ! -L "/usr/lib/sysusers.d" ]; then
+        echo "Creating /usr/lib/sysusers.d directory."
+        install -dm755 -o root -g root /usr/lib/sysusers.d
+      fi
+    fi
     cat > /usr/lib/sysusers.d/halyard.conf <<EOL
 g halyard - -
 g spinnaker - -
@@ -366,9 +345,11 @@ check_migration_needed
 process_args $@
 configure_defaults
 
-install_java
+check_java
 install_halyard
+/usr/local/bin/hal --version
 
+ps aux | grep java
 su -l -c "hal -v" -s /bin/bash $HAL_USER
 
 configure_bash_completion
