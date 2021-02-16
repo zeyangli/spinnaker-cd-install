@@ -5,6 +5,7 @@ env:
   SPINNAKER_VERSION: 1.23.6
   REGISTRY_URL: "gcr.io/spinnaker-marketplace/"
   NEW_REGISTRY_URL: "registry.cn-beijing.aliyuncs.com/spinnaker-cd/"
+  NEW_REGISTRY_URL2: "docker.io/spinnakercd/"
   TAG_FILE: "tagfile.txt"
   BOM_DIR: ".boms"
 
@@ -51,7 +52,7 @@ jobs:
     ## 解析版本文件生成镜像标签
     ## 上传到阿里云镜像仓库
     ## docker https://github.com/Azure/docker-login
-    - name: 03-同步镜像到阿里云
+    - name: 03-1-获取gcr.io镜像
       run: |
         python3 tools/fileprocess.py ${SPINNAKER_VERSION}.yml  ${TAG_FILE} ${BOM_DIR} 
         ls ${BOM_DIR}
@@ -65,14 +66,27 @@ jobs:
            echo  -e "\033[32m  ---> pull ---> ${REGISTRY_URL}${tag} \033[0m"
            docker pull ${REGISTRY_URL}${tag}
         done
+    
         
+    - name: 03-2-同步镜像到dockerHUB
+      run: |
+        docker login -u ${{ secrets.HUBDOCKER_USER}} -p ${{ secrets.HUBDOCKER_PASSWD}} ${NEW_REGISTRY_URL2}
         for tag in $(cat ${TAG_FILE})
         do 
-           echo  -e "\033[32m  ---> pull ---> ${REGISTRY_URL}${tag} \033[0m"
-           docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
-           docker push ${NEW_REGISTRY_URL}${tag}
+           echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL2}${tag} \033[0m"
+           docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL2}${tag}
+           docker push ${NEW_REGISTRY_URL2}${tag}
         done
-        
+           
+    - name: 03-3-同步镜像到阿里云镜像仓库
+      run: |
+        docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} ${NEW_REGISTRY_URL}
+        for tag in $(cat ${TAG_FILE})
+        do 
+           echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL}${tag} \033[0m"
+           docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
+           docker push ${NEW_REGISTRY_URL2}${tag}
+        done
            
     ## 收集镜像tag文件和下载镜像的脚本
     - name: 04- 收集镜像tag文件和下载镜像的脚本
