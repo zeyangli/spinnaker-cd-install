@@ -41,6 +41,21 @@ sh install.sh install   ## 安装spinnaker
 sh install.sh ingress   ## 创建ingress
 
 ```
+验证pod运行状态
+
+```
+[root@master 1.23.6]# kubectl get pod -n spinnaker
+NAME                                READY   STATUS    RESTARTS   AGE
+spin-clouddriver-65c656b665-v9qgg   0/1     Running   0          36s
+spin-deck-c74b79594-vbp2l           1/1     Running   0          34s
+spin-echo-56bbbbd648-bj2ss          0/1     Running   0          36s
+spin-front50-54894dd569-6p89d       0/1     Running   0          31s
+spin-gate-5798654745-4fzkw          0/1     Running   0          35s
+spin-igor-68f6bfdcbc-zbhcq          0/1     Running   0          33s
+spin-orca-5547d664b8-pj8tw          0/1     Running   0          32s
+spin-redis-6d85585fd7-d6jzx         1/1     Running   0          34s
+spin-rosco-56c56bb968-vmfr8         0/1     Running   0          31s
+```
 
 
 
