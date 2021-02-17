@@ -8,15 +8,43 @@
 ![acr-images](acr.png)
 
 
-## 采用halyard部署（代理方式）
+
+## 安装说明(最新)
+在[actions](https://github.com/zeyangli/spinnaker-cd-install/actions) 中获取最新的版本部署脚本文件。
+将该文件上传到配置好了kubectl客户端的节点中。
+
+- 首先解压
+```
+unzip 1.23.6-Install-Script.zip  && cd 1.23.6
+[root@master 1.23.6]# ls
+GetImages.sh  halyard.sh  halyard.yaml  ingress.yaml  install.sh  tagfile.txt
+[root@master 1.23.6]# tree
+.
+├── GetImages.sh     ## 可单独执行，遍历tagfile.txt进行镜像下载。
+├── halyard.sh       ## Halyard初始化配置脚本。
+├── halyard.yaml     ## Halyard容器方式部署时的配置文件。
+├── ingress.yaml     ## Spinnaker 部署后的Ingress模板文件。
+├── install.sh       ## Spinnaker 部署脚本。
+└── tagfile.txt      ## 镜像标签文件（该文件的形成取决于bom版本文件中的定义，具体可以看actions过程）
+
+0 directories, 6 files
+```
+
+首先在每个k8s node节点下载spinnaker部署时需要的docker镜像， 然后安装spinnaker。
+
+```
+[root@master 1.23.6]# sh install.sh
+ [getimg -> install -> ingress = allinstall]
+
+sh install.sh getimg    ## 下载镜像（提前配置好各node节点的免密）
+sh install.sh install   ## 安装spinnaker
+sh install.sh ingress   ## 创建ingress
 
 ```
 
-```
 
 
-
-## halyard-bom-install
+## halyard-bom-install（demo）
 
 使用halyard安装配置spinnaker，无需设置代理。（bom方式）这种方式会启动一个docker容器（halyard）执行任务。
 
@@ -32,7 +60,7 @@
 注意编辑install.sh 调整部署变量值。 然后 sh -x install.sh allinstall .
 
 
-## helm-bom-install
+## helm-bom-install[废弃]
 
 其实是一个helm chart，已经对values做了修改。这种方式会启动一个pod（halyard）执行任务。
 
