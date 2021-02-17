@@ -11,6 +11,28 @@
 
 
 ## 安装说明(最新)
+
+- 提前部署好S3存储（可以使用minio，提前部署好，注意更新tools/halyard.sh文件）
+
+```
+## Storage 配置基于minio搭建的S3存储
+hal config storage s3 edit \
+        --endpoint http://minio.idevops.site \
+        --access-key-id AKIAIOSFODNN7EXAMPLE \
+        --secret-access-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY \
+        --bucket spinnaker \
+        --path-style-access true --no-validate
+hal config storage edit --type s3 --no-validate
+```
+
+- 如需自定义spinnaker域名，可以修改tools/halyard.sh
+
+```
+DECK_HOST="http://spinnaker.idevops.site"
+GATE_HOST="http://spin-gate.idevops.site"
+```
+
+
 在[actions](https://github.com/zeyangli/spinnaker-cd-install/actions) 中获取最新的版本部署脚本文件。
 将该文件上传到配置好了kubectl客户端的节点中。
 
