@@ -7,13 +7,13 @@
 
 ![acr-images](acr.png)
 
+已同步更新docker.io。  
 
 
 ## 安装说明(最新)
 在[actions](https://github.com/zeyangli/spinnaker-cd-install/actions) 中获取最新的版本部署脚本文件。
 将该文件上传到配置好了kubectl客户端的节点中。
 
-- 首先解压
 ```
 unzip 1.23.6-Install-Script.zip  && cd 1.23.6
 [root@master 1.23.6]# ls
@@ -30,7 +30,7 @@ GetImages.sh  halyard.sh  halyard.yaml  ingress.yaml  install.sh  tagfile.txt
 0 directories, 6 files
 ```
 
-首先在每个k8s node节点下载spinnaker部署时需要的docker镜像， 然后安装spinnaker。
+在每个k8s node节点下载spinnaker部署时需要的docker镜像， 然后安装spinnaker。
 
 ```
 [root@master 1.23.6]# sh install.sh
@@ -94,7 +94,7 @@ kubectl get pod -n spinnaker
 ## Spinnaker版本更新
 注意：现在已经在actions中配置ci，大部分步骤都是自动完成的。需要提前将您当前spinnaker版本的boms文件（~/.hal/.boms）打包上传到代理库updates目录中哦！
 
-使用github actions 自动化获取版本文件，获取gcr.io镜像然后更名上传到阿里云仓库中。最后会生成一个制品`version-image-script`，里面包含镜像tag文件和下载镜像的脚本。
+使用github actions 自动化获取版本文件，获取gcr.io镜像然后更名上传到阿里云仓库中。最后会生成一个制品`version-install-script`，里面包含镜像tag文件和下载镜像的脚本。
 (图片如果加载不出来，可以直接在Actions中查看最新的流水线中获取哦)
  ![artifacts-images](docs/artifacts.png)
 
