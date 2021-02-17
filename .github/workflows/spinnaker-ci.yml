@@ -30,7 +30,7 @@ jobs:
 #         sleep 5
 #         hal -v    
 #     ## 
-    - name: 01-启动Halyard容器
+    - name: 01-使用Halyard获取bom版本文件
       run: |
         docker pull registry.cn-beijing.aliyuncs.com/spinnaker-cd/halyard:1.32.0
         docker run -itd -p 8084:8084 -p 9000:9000 --name halyard  registry.cn-beijing.aliyuncs.com/spinnaker-cd/halyard:1.32.0
@@ -41,25 +41,18 @@ jobs:
         docker exec -u root halyard chmod +x /opt/getbom.sh
         docker exec -u root halyard sh /opt/getbom.sh ${SPINNAKER_VERSION}
         docker cp halyard:/opt/${SPINNAKER_VERSION}.yml ./${SPINNAKER_VERSION}.yml
-        
-
-    - name: 02- 获取spinnaker版本文件
-      run: |  
-        #hal version list
-        #hal version bom ${SPINNAKER_VERSION} -q -o yaml >${SPINNAKER_VERSION}.yml
         mkdir -p .boms
-
+        
     ## 解析版本文件生成镜像标签
     ## 上传到阿里云镜像仓库
     ## docker https://github.com/Azure/docker-login
-    - name: 03-1-获取gcr.io镜像
+    - name: 02-1-获取gcr.io镜像
       run: |
         python3 tools/fileprocess.py ${SPINNAKER_VERSION}.yml  ${TAG_FILE} ${BOM_DIR} 
         ls ${BOM_DIR}
       
         echo  -e "\033[32m  ---> Tag File ---> \033[0m"
         cat ${TAG_FILE}
-
         docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} ${NEW_REGISTRY_URL}
         for tag in $(cat ${TAG_FILE})
         do 
@@ -67,35 +60,45 @@ jobs:
            docker pull ${REGISTRY_URL}${tag}
         done
     
-        
-    - name: 03-2-同步镜像到dockerHUB
-      run: |
-        docker login -u ${{ secrets.HUBDOCKER_USER}} -p ${{ secrets.HUBDOCKER_PASSWD}} docker.io
-        for tag in $(cat ${TAG_FILE})
-        do 
-           echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL2}${tag} \033[0m"
-           docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL2}${tag}
-           docker push ${NEW_REGISTRY_URL2}${tag}
-        done
+    # - name: 02-2-同步镜像到dockerHUB
+    #   run: |
+    #     docker login -u ${{ secrets.HUBDOCKER_USER}} -p ${{ secrets.HUBDOCKER_PASSWD}} docker.io
+    #     for tag in $(cat ${TAG_FILE})
+    #     do 
+    #        echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL2}${tag} \033[0m"
+    #        docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL2}${tag}
+    #        docker push ${NEW_REGISTRY_URL2}${tag}
+    #     done
            
-    - name: 03-3-同步镜像到阿里云镜像仓库
-      run: |
-        docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} ${NEW_REGISTRY_URL}
-        for tag in $(cat ${TAG_FILE})
-        do 
-           echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL}${tag} \033[0m"
-           docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
-           docker push ${NEW_REGISTRY_URL}${tag}
-        done
+    # - name: 02-3-同步镜像到阿里云镜像仓库
+    #   run: |
+    #     docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} ${NEW_REGISTRY_URL}
+    #     for tag in $(cat ${TAG_FILE})
+    #     do 
+    #        echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL}${tag} \033[0m"
+    #        docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
+    #        docker push ${NEW_REGISTRY_URL}${tag}
+    #     done
            
     ## 收集镜像tag文件和下载镜像的脚本
-    - name: 04- 收集镜像tag文件和下载镜像的脚本
+    - name: 03- 收集镜像tag文件和下载镜像的脚本
       run : |
         mkdir -p artifacts/${SPINNAKER_VERSION}
         mv ${TAG_FILE} artifacts/${SPINNAKER_VERSION}/
         mv tools/GetImages.sh artifacts/${SPINNAKER_VERSION}/
+        ## install scripts files 
+        sed -i "s/SPIN_VERSION/${SPINNAKER_VERSION}/g" tools/install.sh
+        sed -i "s/SPIN_VERSION/${SPINNAKER_VERSION}/g" tools/halyard.sh
+        mv tools/halyard.sh artifacts/${SPINNAKER_VERSION}/
+        mv tools/halyard.yaml artifacts/${SPINNAKER_VERSION}/
+        mv tools/install.sh artifacts/${SPINNAKER_VERSION}/
+        mv tools/ingress.yaml artifacts/${SPINNAKER_VERSION}/
+        ##
         mv ${BOM_DIR} artifacts/${SPINNAKER_VERSION}/
         mkdir -p artifacts/${SPINNAKER_VERSION}/${BOM_DIR}/bom
+
+        ## 修改dockerregistry
+        sed -i "s/us-docker.pkg.dev\/spinnaker-community\/docker/gcr.io\/spinnaker-marketplace/g" ${SPINNAKER_VERSION}.yml
         mv ${SPINNAKER_VERSION}.yml artifacts/${SPINNAKER_VERSION}/${BOM_DIR}/bom/
         
     ## artifact https://github.com/actions/upload-artifact
@@ -103,4 +106,3 @@ jobs:
       with: 
         name: ${{ env.SPINNAKER_VERSION }}-Image-Script
         path: artifacts/*
-
