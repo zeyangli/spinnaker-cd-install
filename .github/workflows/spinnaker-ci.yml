@@ -71,15 +71,15 @@ jobs:
            docker push ${NEW_REGISTRY_URL2}${tag}
         done
            
-    - name: 02-3-同步镜像到阿里云镜像仓库
-      run: |
-        docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} ${NEW_REGISTRY_URL}
-        for tag in $(cat ${TAG_FILE})
-        do 
-           echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL}${tag} \033[0m"
-           docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
-           docker push ${NEW_REGISTRY_URL}${tag}
-        done
+#     - name: 02-3-同步镜像到阿里云镜像仓库
+#       run: |
+#         docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} ${NEW_REGISTRY_URL}
+#         for tag in $(cat ${TAG_FILE})
+#         do 
+#            echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL}${tag} \033[0m"
+#            docker tag ${REGISTRY_URL}${tag} ${NEW_REGISTRY_URL}${tag}
+#            docker push ${NEW_REGISTRY_URL}${tag}
+#         done
            
     ## 收集镜像tag文件和下载镜像的脚本
     - name: 03- 收集镜像tag文件和下载镜像的脚本
