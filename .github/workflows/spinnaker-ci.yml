@@ -6,7 +6,7 @@ env:
   #REGISTRY_URL: "gcr.io/spinnaker-marketplace/"
   REGISTRY_URL: "us-docker.pkg.dev/spinnaker-community/docker/"
   NEW_REGISTRY_URL: "registry.cn-beijing.aliyuncs.com/spinnaker-cd/"
-  NEW_REGISTRY_URL2: "docker.io/spinnakercd/"
+  NEW_REGISTRY_URL2: "docker.io/duiniwukenaihe/spinnaker-cd/"
   TAG_FILE: "tagfile.txt"
   BOM_DIR: ".boms"
 
@@ -63,7 +63,7 @@ jobs:
     
     - name: 02-2-同步镜像到dockerHUB
       run: |
-        docker login -u ${{ secrets.HUBDOCKER_USER}} -p ${{ secrets.HUBDOCKER_PASSWD}} docker.io
+        docker login -u ${{ secrets.DOCKER_USER}} -p ${{ secrets.DOCKER_PASSWD}} docker.io
         for tag in $(cat ${TAG_FILE})
         do 
            echo  -e "\033[32m  ---> push ---> ${NEW_REGISTRY_URL2}${tag} \033[0m"
