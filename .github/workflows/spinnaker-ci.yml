@@ -9,6 +9,7 @@ env:
   NEW_REGISTRY_URL2: "docker.io/spinnakercd/"
   TAG_FILE: "tagfile.txt"
   BOM_DIR: ".boms"
+  
 
 on:
   push:
