@@ -33,7 +33,7 @@ GATE_HOST="http://spin-gate.idevops.site"
 ```
 
 
-在[actions](https://github.com/zeyangli/spinnaker-cd-install/actions) 中获取最新的版本部署脚本文件。
+在[actions](https://github.com/zeyangli/spinnaker-cd-install/actions) 中获取最新的版本部署脚本文件(代码库中已保存1.26.7版本的安装脚本文件)。
 将该文件上传到配置好了kubectl客户端的节点中。
 
 ```
